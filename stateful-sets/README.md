@@ -30,3 +30,35 @@ Modify the output above to accomplish the following:
   selector:
     name: "mongodb"
 ```
+
+
+2. Regular ClusterIP service:
+
+```
+oc create service clusterip mongodb \
+  --tcp=27017 \
+  --dry-run -o yaml > mongodb-svc.yaml
+```
+
+Modify the output above to accomplish the following:
+
+* Change the generated label to name=mongodb:
+
+```
+  labels:
+    name: "mongodb"
+```
+
+* Change the generated selector to name=mongodb:
+
+```
+  selector:
+    name: "mongodb"
+```
+
+* Change port name to "mongodb":
+
+```
+  ports:
+    - name: mongodb
+```
