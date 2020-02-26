@@ -47,10 +47,22 @@ Resume rollout:
 oc rollout resume dc nexus
 ```
 
+Create service for registry (port 5000):
+```
+oc create service clusterip nexus-registry --tcp=5000
+```
+
+Create a route to expose port 5000 using edge termination:
+```
+oc create route edge nexus-registry --service=nexus-registry --port=5000
+```
+
+
 #######################################
 
 SonarQube
 
+Create the backing database:
 ```
 oc new-app --template=postgresql-persistent \
   --param POSTGRESQL_USER=sonar \
@@ -59,4 +71,48 @@ oc new-app --template=postgresql-persistent \
   --param VOLUME_CAPACITY=4Gi \
   --labels=app=sonarqube_db
 ```
-TODO: labels came from solution; do we need this?
+TODO: labels came from lab solution doc; do we need this?
+
+Deploy SonarQube:
+```
+oc new-app --docker-image=quay.io/gpte-devops-automation/sonarqube:7.9.1 -e SONARQUBE_JDBC_USERNAME=sonar -e SONARQUBE_JDBC_PASSWORD=sonar -e SONARQUBE_JDBC_URL=jdbc:postgresql://postgresql/sonar
+```
+
+Pause rollout (see prior instructions)
+
+Create a route for SonarQube:
+```
+oc expose svc sonarqube
+```
+
+Create a PVC:
+(TODO: Same as above; oc create, but also find oc cli way to do)
+
+Add PVC to dc:
+(TODO: Same as above, +need oc command)
+
+Add limits/resource:
+```
+oc set resources dc sonarqube --limits=cpu=2,memory=3Gi --requests=cpu=1,memory=2G
+```
+
+Readiness/Liveness probes:
+```
+oc set probe dc/sonarqube --readiness --open-tcp=9000
+oc set probe dc/sonarqube --liveness --open-tcp=9000
+```
+TODO: Better probes?
+
+
+Annotate the pod through the dc (TODO: oc annotate works directly against pod; is there a way to do w/o oc patch dc?)
+```
+spec:
+  template:
+    metadata:
+      annotations:
+        tuned.openshift.io/elasticsearch: "true"
+```
+TODO: Verify that the above is correct; not 100% sure at time of writing
+
+
+
