@@ -41,6 +41,11 @@ Set volume to use PVC:
 ```
 TODO: Update to use oc set volume command!
 
+Resume rollout:
+
+```
+oc rollout resume dc nexus
+```
 
 #######################################
 
