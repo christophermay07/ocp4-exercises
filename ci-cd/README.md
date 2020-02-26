@@ -16,18 +16,8 @@ Edit the following in the nexus dc:
 (NOTE: Can I leave the rollingParams, or must I remove?)
 
 ```
-spec:
-  containers:
-  - name: ...
-    resources:
-      limits:
-        cpu: "2"
-        memory: "2Gi"
-      requests:
-        cpu: "500m"
-        memory: "1Gi"
+oc set resources dc nexus --limits=cpu=2,memory=2Gi --requests=cpu=500m,memory=1G
 ```
-TODO: Can I turn the above into oc command?
 
 Add liveness / readiness probes:
 
