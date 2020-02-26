@@ -27,7 +27,22 @@ oc set probe dc/nexus --liveness --open-tcp=8080
 ```
 TODO: The above isn't great :(
 
-#######################################3
+Apply PVC (in repo):
+```
+oc create -f nexus-pvc.yaml
+```
+
+Set volume to use PVC:
+```
+      volumes:
+      - name: nexus-volume-1
+        persistentVolumeClaim:
+          claimName: nexus-data
+```
+TODO: Update to use oc set volume command!
+
+
+#######################################
 
 SonarQube
 
