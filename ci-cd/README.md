@@ -115,4 +115,14 @@ spec:
 TODO: Verify that the above is correct; not 100% sure at time of writing
 
 
+################################
+
+Jenkins:
+
+oc new-app --template=jenkins-persistent -p MEMORY_LIMIT=2Gi -p VOLUME_CAPACITY=4Gi -p DISABLE_ADMINISTRATIVE_MONITORS=true
+
+Add limits/resource:
+```
+oc set resources dc jenkins --limits=cpu=2 --requests=cpu=500m,memory=1Gi
+```
 
